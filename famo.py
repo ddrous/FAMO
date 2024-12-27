@@ -44,7 +44,7 @@ class FAMO:
         self.w.grad = d
         self.w_opt.step()
 
-    def backward(
+    def backward(        ## @DDROUS this is just the name, not a Torch API backward !! 
         self,
         losses: torch.Tensor,
         shared_parameters: Union[
@@ -83,9 +83,9 @@ if __name__ == "__main__":
     opt = torch.optim.Adam(model.parameters())
 
     for it in range(100):
-        loss = (Y - model(X)).pow(2).mean(0) # (K,)
+        loss = (Y - model(X)).pow(2).mean(0) # (K,)        ## @DDROUS This should called losses !
         opt.zero_grad()
-        weight_opt.backward(loss)
+        weight_opt.backward(loss)        ## @DDROUS Normally, we would simply do loss.mean().backward() here. But we have to (i) weight them appropriately first, and (ii) store the prev_loss useful during the the task weighting updates!
         opt.step()
         # update the task weighting
         with torch.no_grad():
